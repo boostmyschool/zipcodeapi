@@ -1,0 +1,19 @@
+{
+  "name": "zipcodeapi",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "ssh://git@github.com/golmansax/zipcodeapi.git",
+  "author": "Holman Gao <holman@golmansax.com>",
+  "license": "MIT",
+  "scripts": {
+    "test": "mocha test.js"
+  },
+  "devDependencies": {
+    "fetch-mock": "^5.12.2",
+    "isomorphic-fetch": "^2.2.1",
+    "mocha": "^3.5.3"
+  },
+  "dependencies": {
+    "chai": "^4.1.2"
+  }
+}
