@@ -27,11 +27,11 @@ ZipCodeApi.prototype.makeRestUrl = function(suffix) {
     throw new Error('Must set an API key');
   }
 
-  return `http://www.zipcodeapi.com/rest/${this.apiKey}${suffix}`;
+  return 'http://www.zipcodeapi.com/rest/' + this.apiKey + suffix;
 };
 
 ZipCodeApi.prototype.lookupZipCode = function (zipCode) {
-  return fetch(this.makeRestUrl(`/info.json/${zipCode}/radians`), {
+  return fetch(this.makeRestUrl('/info.json/' + zipCode + '/radians'), {
     headers: {
       Accept: 'application/json',
     },

@@ -1,6 +1,6 @@
 {
   "name": "zipcodeapi",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "index.js",
   "repository": "ssh://git@github.com/golmansax/zipcodeapi.git",
   "author": "Holman Gao <holman@golmansax.com>",
