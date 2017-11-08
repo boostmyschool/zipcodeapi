@@ -19,7 +19,7 @@ describe('zipCodeApi', function () {
         apiKey: 'fake-key',
       });
 
-      mock = fetchMock.mock('http://www.zipcodeapi.com/rest/fake-key/info.json/90210/radians', {
+      mock = fetchMock.mock('https://www.zipcodeapi.com/rest/fake-key/info.json/90210/radians', {
         city: 'Beverly Hills',
         state: 'CA',
       });
