@@ -1,3 +1,5 @@
+const sha1 = require('js-sha1');
+
 function checkStatus(res) {
   if (res.status >= 200 && res.status < 300) {
     return res;
@@ -15,27 +17,32 @@ ZipCodeApi.prototype.init = function(options) {
   options = options || {};
   const clientKey = options.clientKey;
   const apiKey = options.apiKey;
-
-  if (!clientKey || !apiKey) {
-    throw new Error('Must set a client and api key');
+  const domain = options.domain;
+  if (!clientKey || !apiKey || !domain) {
+    throw new Error('Must set a client key, api key, and domain');
   }
 
   this.clientKey = clientKey;
   this.apiKey = apiKey;
+  this.domain = domain;
 };
 
 ZipCodeApi.prototype.makeRestUrl = function(suffix) {
-  if (!this.clientKey) {
-    throw new Error('Must set an API key');
+  if (!this.clientKey || !this.apiKey || !this.domain) {
+    throw new Error('Must set a client key, api key, and domain');
   }
 
-  const salt = 'asdjklfas234r3512kldjfklas'
+  const salt = 'Abcd1234'
   const currentTime = Math.floor(Date.now() / 1000);
-  const sigPrefix = currentTime + '-1-' + salt;
-  const sigBase = sigPrefix + '-localhost-' + this.apiKey;
-  const authHash = sigPrefix + '-' + 1234; // TODO need to change this to an sha1 of sigBase
+  const sigPrefix = `${currentTime}-6-${salt}`;
+  const sigBase = `${sigPrefix}-${this.domain.toLowerCase()}-${this.apiKey}`;
+  const hash = sha1(sigBase);
+  const authHash = `${sigPrefix}-${hash}`;
+  const endpoint = `https://www.zipcodeapi.com/rest/${this.clientKey}${suffix}?authHash=${authHash}`;
 
-  return 'https://www.zipcodeapi.com/rest/' + this.clientKey + suffix + '?authHash=' + authHash;
+  console.log({endpoint, sigBase, hash, authHash});
+
+  return endpoint;
 };
 
 ZipCodeApi.prototype.lookupZipCode = function (zipCode) {

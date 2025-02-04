@@ -6,7 +6,7 @@ const zipCodeApi = require('./');
 describe('zipCodeApi', function () {
   describe('#init', function () {
     it('complains when an apiKey is not given', function () {
-      expect(zipCodeApi.init).to.throw('Must set an API key');
+      expect(zipCodeApi.init).to.throw('Must set a client key, api key, and domain');
     });
   });
 
@@ -17,9 +17,13 @@ describe('zipCodeApi', function () {
       zipCodeApi.init({
         // Can use real key and comment out mock to test actual API
         apiKey: 'fake-key',
+        clientKey: 'fake-key',
+        domain: 'www.zipcodeapi.com',
       });
 
-      mock = fetchMock.mock('https://www.zipcodeapi.com/rest/fake-key/info.json/90210/radians', {
+      mock = fetchMock.mock((url, opts) => {
+        return url.startsWith('https://www.zipcodeapi.com/rest/fake-key/info.json/90210')
+      }, {
         city: 'Beverly Hills',
         state: 'CA',
       });
