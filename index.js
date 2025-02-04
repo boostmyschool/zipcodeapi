@@ -13,21 +13,29 @@ function ZipCodeApi() {
 
 ZipCodeApi.prototype.init = function(options) {
   options = options || {};
+  const clientKey = options.clientKey;
   const apiKey = options.apiKey;
 
-  if (!apiKey) {
-    throw new Error('Must set an API key');
+  if (!clientKey || !apiKey) {
+    throw new Error('Must set a client and api key');
   }
 
+  this.clientKey = clientKey;
   this.apiKey = apiKey;
 };
 
 ZipCodeApi.prototype.makeRestUrl = function(suffix) {
-  if (!this.apiKey) {
+  if (!this.clientKey) {
     throw new Error('Must set an API key');
   }
 
-  return 'https://www.zipcodeapi.com/rest/' + this.apiKey + suffix;
+  const salt = 'asdjklfas234r3512kldjfklas'
+  const currentTime = Math.floor(Date.now() / 1000);
+  const sigPrefix = currentTime + '-1-' + salt;
+  const sigBase = sigPrefix + '-localhost-' + this.apiKey;
+  const authHash = sigPrefix + '-' + 1234; // TODO need to change this to an sha1 of sigBase
+
+  return 'https://www.zipcodeapi.com/rest/' + this.clientKey + suffix + '?authHash=' + authHash;
 };
 
 ZipCodeApi.prototype.lookupZipCode = function (zipCode) {
