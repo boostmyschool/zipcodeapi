@@ -32,15 +32,13 @@ ZipCodeApi.prototype.makeRestUrl = function(suffix) {
     throw new Error('Must set a client key, api key, and domain');
   }
 
-  const salt = 'Abcd1234'
+  const salt = Array.from({ length: 16 }, () => (Math.random() * 36 | 0).toString(36)).join('');
   const currentTime = Math.floor(Date.now() / 1000);
   const sigPrefix = `${currentTime}-6-${salt}`;
   const sigBase = `${sigPrefix}-${this.domain.toLowerCase()}-${this.apiKey}`;
   const hash = sha1(sigBase);
   const authHash = `${sigPrefix}-${hash}`;
   const endpoint = `https://www.zipcodeapi.com/rest/${this.clientKey}${suffix}?authHash=${authHash}`;
-
-  console.log({endpoint})
 
   return endpoint;
 };
