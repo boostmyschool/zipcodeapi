@@ -40,6 +40,8 @@ ZipCodeApi.prototype.makeRestUrl = function(suffix) {
   const authHash = `${sigPrefix}-${hash}`;
   const endpoint = `https://www.zipcodeapi.com/rest/${this.clientKey}${suffix}?authHash=${authHash}`;
 
+  console.log({endpoint})
+
   return endpoint;
 };
 
