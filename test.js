@@ -15,32 +15,28 @@ describe('zipCodeApi', function () {
 
     beforeEach(function () {
       zipCodeApi.init({
-        // Can use real key and comment out mock to test actual API
-        // apiKey: 'fake-key',
-        // clientKey: 'fake-key',
-        // domain: 'www.zipcodeapi.com',
-
-        apiKey: 'ADD_REAL_KEY',
-        clientKey: 'ADD_REAL_KEY',
-        domain: 'www.zipcodeapi.com',
-        // domain: 'localhost',
-        // domain: '162.245.142.87',
+        // Can use real keys and comment out mock to test actual API by logging out the 
+        // genereated url and calling it through codepen using the domain cdpn.io
+        // https://codepen.io/caitlinface/pen/bNbPRwV?editors=1011
+        apiKey: 'fake-key',
+        clientKey: 'fake-key',
+        domain: 'fake-domain',
       });
 
-      // mock = fetchMock.mock((url, opts) => {
-      //   return url.startsWith('https://www.zipcodeapi.com/rest/fake-key/info.json/90210')
-      // }, {
-      //   city: 'Beverly Hills',
-      //   state: 'CA',
-      // });
+      mock = fetchMock.mock((url, opts) => {
+        return url.startsWith('https://www.zipcodeapi.com/rest/fake-key/info.json/90210')
+      }, {
+        city: 'Beverly Hills',
+        state: 'CA',
+      });
     });
 
-    // afterEach(function () {
-    //   mock.restore();
-    // });
+    afterEach(function () {
+      mock.restore();
+    });
 
     it('returns city and state', function () {
-      return zipCodeApi.lookupZipCode(90210)
+      return zipCodeApi.lookupZipCode('90210')
         .then(function (res) {
           expect(res.city).to.equal('Beverly Hills');
           expect(res.state).to.equal('CA');
