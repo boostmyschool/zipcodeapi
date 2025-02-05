@@ -23,6 +23,8 @@ describe('zipCodeApi', function () {
         apiKey: 'ADD_REAL_KEY',
         clientKey: 'ADD_REAL_KEY',
         domain: 'www.zipcodeapi.com',
+        // domain: 'localhost',
+        // domain: '162.245.142.87',
       });
 
       // mock = fetchMock.mock((url, opts) => {
