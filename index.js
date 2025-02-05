@@ -18,27 +18,29 @@ ZipCodeApi.prototype.init = function(options) {
   const clientKey = options.clientKey;
   const apiKey = options.apiKey;
   const domain = options.domain;
+
   if (!clientKey || !apiKey || !domain) {
-    throw new Error('Must set a client key, api key, and domain');
-  }
-
-  this.clientKey = clientKey;
-  this.apiKey = apiKey;
-  this.domain = domain;
-};
-
-ZipCodeApi.prototype.makeRestUrl = function(suffix) {
-  if (!this.clientKey || !this.apiKey || !this.domain) {
     throw new Error('Must set a client key, api key, and domain');
   }
 
   const salt = Array.from({ length: 16 }, () => (Math.random() * 36 | 0).toString(36)).join('');
   const currentTime = Math.floor(Date.now() / 1000);
-  const sigPrefix = `${currentTime}-6-${salt}`;
-  const sigBase = `${sigPrefix}-${this.domain.toLowerCase()}-${this.apiKey}`;
+  const hoursUntilExpiration = 1;
+  const sigPrefix = `${currentTime}-${hoursUntilExpiration}-${salt}`;
+  const sigBase = `${sigPrefix}-${domain.toLowerCase()}-${apiKey}`;
   const hash = sha1(sigBase);
   const authHash = `${sigPrefix}-${hash}`;
-  const endpoint = `https://www.zipcodeapi.com/rest/${this.clientKey}${suffix}?authHash=${authHash}`;
+
+  this.clientKey = clientKey;
+  this.authHash = authHash;
+};
+
+ZipCodeApi.prototype.makeRestUrl = function(suffix) {
+  if (!this.clientKey) {
+    throw new Error('Must set a client key');
+  }
+
+  const endpoint = `https://www.zipcodeapi.com/rest/${this.clientKey}${suffix}?authHash=${this.authHash}`;
 
   return endpoint;
 };
