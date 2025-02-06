@@ -1,8 +1,8 @@
 {
   "name": "zipcodeapi",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "main": "index.js",
-  "repository": "ssh://git@github.com/golmansax/zipcodeapi.git",
+  "repository": "ssh://git@github.com/boostmyschool/zipcodeapi.git",
   "author": "Holman Gao <holman@golmansax.com>",
   "license": "MIT",
   "scripts": {
