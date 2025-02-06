@@ -14,13 +14,22 @@ function ZipCodeApi() {
 }
 
 ZipCodeApi.prototype.init = function(options) {
+  this.clientKey = null;
+  this.authHash = null;
+
   options = options || {};
   const clientKey = options.clientKey;
   const apiKey = options.apiKey;
   const domain = options.domain;
 
-  if (!clientKey || !apiKey || !domain) {
-    throw new Error('Must set a client key, api key, and domain');
+  if (!clientKey) {
+    throw new Error('Must set a client key');
+  }
+
+  this.clientKey = clientKey;
+
+  if (!apiKey || !domain) {
+    return;
   }
 
   const salt = Array.from({ length: 16 }, () => (Math.random() * 36 | 0).toString(36)).join('');
@@ -31,16 +40,19 @@ ZipCodeApi.prototype.init = function(options) {
   const hash = sha1(sigBase);
   const authHash = `${sigPrefix}-${hash}`;
 
-  this.clientKey = clientKey;
   this.authHash = authHash;
 };
 
-ZipCodeApi.prototype.makeRestUrl = function(suffix) {
+ZipCodeApi.prototype.makeRestUrl = function(zipcode) {
   if (!this.clientKey) {
     throw new Error('Must set a client key');
   }
 
-  const endpoint = `https://www.zipcodeapi.com/rest/${this.clientKey}${suffix}?authHash=${this.authHash}`;
+  let endpoint = `https://www.zipcodeapi.com/rest/${this.clientKey}/info.json/${zipcode}/radians`;
+
+  if (this.authHash) {
+    endpoint += `?authHash=${this.authHash}`;
+  }
 
   // Uncomment for testing
   // console.log({endpoint});
@@ -49,7 +61,7 @@ ZipCodeApi.prototype.makeRestUrl = function(suffix) {
 };
 
 ZipCodeApi.prototype.lookupZipCode = function (zipCode) {
-  return fetch(this.makeRestUrl('/info.json/' + zipCode + '/radians'), {
+  return fetch(this.makeRestUrl(zipCode), {
     headers: {
       Accept: 'application/json',
     },
