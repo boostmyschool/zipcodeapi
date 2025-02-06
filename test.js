@@ -31,7 +31,7 @@ describe('zipCodeApi', function () {
       });
     });
 
-    after(function () {
+    afterEach(function () {
       mock.restore();
     });
 
